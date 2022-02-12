@@ -1,5 +1,6 @@
-package com.example.shoppinglist.domain
+package com.example.shoppinglist.domain.repository
 
+import androidx.lifecycle.LiveData
 import com.example.shoppinglist.domain.model.ShopItem
 
 interface ShopListRepository {
@@ -12,7 +13,7 @@ interface ShopListRepository {
 
     fun removeShopItem(shopItem: ShopItem)
 
-    fun getShopList(): List<ShopItem>
+    fun getShopList(): LiveData<List<ShopItem>>
 
 }
 
