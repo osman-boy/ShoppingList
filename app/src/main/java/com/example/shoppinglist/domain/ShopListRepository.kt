@@ -10,7 +10,7 @@ interface ShopListRepository {
 
     fun getShopItem(shopItemId: Int): ShopItem
 
-    fun removeShopItemUseCase(shopItem: ShopItem)
+    fun removeShopItem(shopItem: ShopItem)
 
     fun getShopList(): List<ShopItem>
 
