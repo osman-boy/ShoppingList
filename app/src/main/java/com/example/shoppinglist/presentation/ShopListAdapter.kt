@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.model.ShopItem
@@ -13,15 +14,7 @@ import com.example.shoppinglist.domain.model.ShopItem
 typealias OnShopItemLongClickListener = (shopItem: ShopItem) -> Unit
 typealias OnShopItemClickListener = (shopItem: ShopItem) -> Unit
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
-
-    var shopList: List<ShopItem> = listOf()
-        set(value) {
-            val callback=DiffUtilCallback(value,field)
-            val result = DiffUtil.calculateDiff(callback)
-            result.dispatchUpdatesTo(this)
-            field = value
-        }
+class ShopListAdapter : ListAdapter<ShopItem, ShopListAdapter.ShopViewHolder>(ItemDiffUtilCallback()) {
 
     var onShopItemLongClickListener: OnShopItemLongClickListener? = null
     var onShopItemClickListener: OnShopItemClickListener? = null
@@ -34,7 +27,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
 
 
     override fun getItemViewType(position: Int): Int {
-        return if (shopList[position].enabled) VIEW_TYPE_ENABLED else VIEW_TYPE_DISABLED
+        return if (getItem(position).enabled) VIEW_TYPE_ENABLED else VIEW_TYPE_DISABLED
     }
 
 
@@ -51,7 +44,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
 
 
     override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {
-        val item = shopList[position]
+        val item = getItem(position)
         holder.shopName.text = item.name
         holder.shopCount.text = item.count.toString()
 
@@ -62,7 +55,6 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
     }
 
 
-    override fun getItemCount() = shopList.size
 
     companion object {
         const val VIEW_TYPE_DISABLED = 0

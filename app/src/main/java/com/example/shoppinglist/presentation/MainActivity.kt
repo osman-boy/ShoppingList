@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         viewModel.shopList.observe(this) {
-            shopListAdapter.shopList = it
+            shopListAdapter.submitList(it)
         }
     }
 
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             ) = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val shopItem = shopListAdapter.shopList[viewHolder.adapterPosition]
+                val shopItem = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.removeShopItem(shopItem)
             }
         }
