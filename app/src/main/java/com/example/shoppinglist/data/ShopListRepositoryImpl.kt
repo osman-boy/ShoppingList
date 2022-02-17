@@ -6,16 +6,18 @@ import com.example.shoppinglist.domain.repository.ShopListRepository
 import com.example.shoppinglist.domain.model.ShopItem
 import com.example.shoppinglist.domain.model.ShopItem.Companion.UNDEFINED_ID
 import java.lang.RuntimeException
+import java.util.*
+import kotlin.Comparator
 
 class ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLiveData = MutableLiveData<List<ShopItem>>()
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     private var autoIncrementId = 0
 
     init {
-        for (i in 0..10) {
-            val shopItem = ShopItem("Item$i", i * 2, false)
+        for (i in 0..1) {
+            val shopItem = ShopItem("Item$i", i * 2, true)
             addShopItem(shopItem)
         }
     }
