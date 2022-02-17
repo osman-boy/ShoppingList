@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.model.ShopItem
 
+
+typealias OnShopItemLongClickListener = (shopItem: ShopItem) -> Unit
+typealias OnShopItemClickListener = (shopItem: ShopItem) -> Unit
+
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
 
     var shopList: List<ShopItem> = listOf()
@@ -16,6 +20,8 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
             notifyDataSetChanged()
         }
 
+    var onShopItemLongClickListener: OnShopItemLongClickListener? = null
+    var onShopItemClickListener: OnShopItemClickListener? = null
 
     class ShopViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val shopName = view.findViewById<TextView>(R.id.tv_name)
@@ -45,14 +51,21 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopViewHolder>() {
         val item = shopList[position]
         holder.shopName.text = item.name
         holder.shopCount.text = item.count.toString()
+
+        holder.itemView.setOnLongClickListener {
+            onShopItemLongClickListener?.invoke(item)
+            true
+        }
     }
 
 
     override fun getItemCount() = shopList.size
 
     companion object {
-         const val VIEW_TYPE_DISABLED = 0
-         const val VIEW_TYPE_ENABLED = 1
+        const val VIEW_TYPE_DISABLED = 0
+        const val VIEW_TYPE_ENABLED = 1
         const val MAX_POOL_SIZE = 25
     }
+
+
 }

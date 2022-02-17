@@ -16,7 +16,7 @@ class ShopListRepositoryImpl : ShopListRepository {
     private var autoIncrementId = 0
 
     init {
-        for (i in 0..1) {
+        for (i in 0..10) {
             val shopItem = ShopItem("Item$i", i * 2, true)
             addShopItem(shopItem)
         }
