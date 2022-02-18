@@ -46,37 +46,11 @@ class ShopItemFragment : Fragment() {
             if (it) binding.tilName.error = "Name filed is empty"
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-//            finish()
+            activity?.onBackPressed()
         }
     }
 
-    companion object {
 
-        private const val EXTRA_SCREEN_MODE = "extra_mode"
-        private const val MODE_EDIT = "mode_edit"
-        private const val MODE_ADD = "mode_add"
-        private const val MODE_UNKNOWN = ""
-        private const val EXTRA_SHOP_ITEM_ID = "shop_item_id"
-
-        fun newInstanceEditItem(shopItemId: Int): ShopItemFragment {
-            return ShopItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(EXTRA_SCREEN_MODE, MODE_EDIT)
-                    putInt(EXTRA_SHOP_ITEM_ID, shopItemId)
-                }
-            }
-        }
-
-        fun newInstanceAddItem(): ShopItemFragment {
-            return ShopItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(EXTRA_SCREEN_MODE, MODE_ADD)
-                }
-            }
-        }
-
-
-    }
 
 
     private fun startScreenRightMode() {
@@ -154,6 +128,34 @@ class ShopItemFragment : Fragment() {
                 if (!it.containsKey(EXTRA_SHOP_ITEM_ID)) throw java.lang.RuntimeException("Param shopItem id is absent")
 
                 shopItemId = it.getInt(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
+            }
+        }
+
+
+    }
+
+    companion object {
+
+        private const val EXTRA_SCREEN_MODE = "extra_mode"
+        private const val MODE_EDIT = "mode_edit"
+        private const val MODE_ADD = "mode_add"
+        private const val MODE_UNKNOWN = ""
+        private const val EXTRA_SHOP_ITEM_ID = "shop_item_id"
+
+        fun newInstanceEditItem(shopItemId: Int): ShopItemFragment {
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_SCREEN_MODE, MODE_EDIT)
+                    putInt(EXTRA_SHOP_ITEM_ID, shopItemId)
+                }
+            }
+        }
+
+        fun newInstanceAddItem(): ShopItemFragment {
+            return ShopItemFragment().apply {
+                arguments = Bundle().apply {
+                    putString(EXTRA_SCREEN_MODE, MODE_ADD)
+                }
             }
         }
 

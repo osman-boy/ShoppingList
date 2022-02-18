@@ -1,11 +1,15 @@
 package com.example.shoppinglist.presentation
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.LEFT
+import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.shoppinglist.databinding.ActivityMainBinding
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.MAX_POOL_SIZE
@@ -24,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         viewModel.shopList.observe(this) {
-            Log.d("TAG", "observe main ${it[0]}")
             shopListAdapter.submitList(it)
         }
     }
@@ -45,24 +48,36 @@ class MainActivity : AppCompatActivity() {
         shopListAdapter.onShopItemLongClickListener = { viewModel.changeEnableState(shopItem = it) }
 
         shopListAdapter.onShopItemClickListener = {
-            startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
+            launchFragment(
+                fragment = ShopItemFragment.newInstanceEditItem(it.id),
+                intent = ShopItemActivity.newIntentEditItem(this, it.id)
+            )
         }
 
         binding.buttonAddShopItem.setOnClickListener {
-            startActivity(ShopItemActivity.newIntentAddItem(this))
+            launchFragment(
+                fragment = ShopItemFragment.newInstanceAddItem(),
+                intent = ShopItemActivity.newIntentAddItem(this)
+            )
+
         }
     }
 
-    private fun setupSwapListener() {
-        val callback = object :
-            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(
-                recycler: RecyclerView,
-                holder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ) = false
+    private fun launchFragment(fragment: Fragment, intent: Intent) {
+        binding.shopItemMainContainer?.apply {
+            supportFragmentManager.popBackStack()
+            supportFragmentManager.beginTransaction()
+                .replace(id, fragment)
+                .addToBackStack(null)
+                .commit()
+        } ?: startActivity(intent)
+    }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+    private fun setupSwapListener() {
+        val callback = object : ItemTouchHelper.SimpleCallback(0, LEFT or RIGHT) {
+            override fun onMove(recyc: RecyclerView, hold: ViewHolder, target: ViewHolder) = false
+
+            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
                 val shopItem = shopListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.removeShopItem(shopItem)
             }
