@@ -15,13 +15,13 @@ import com.example.shoppinglist.domain.usecase.GetShopItemUseCase
 
 class ShopItemViewModel : ViewModel() {
 
-    private val shopListRepository = ShopListRepositoryImpl()
+    private val shopListRepository = ShopListRepositoryImpl
     private val getShopItemUseCase = GetShopItemUseCase(shopListRepository)
     private val editShopItemUseCase = EditShopItemUseCase(shopListRepository)
     private val addShopItemUseCase = AddShopItemUseCase(shopListRepository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
-    val errorInputName: LiveData<Boolean> get() = _errorInputCount
+    val errorInputName: LiveData<Boolean> get() = _errorInputName
 
     private val _errorInputCount = MutableLiveData<Boolean>()
     val errorInputCount: LiveData<Boolean> get() = _errorInputCount
@@ -91,7 +91,7 @@ class ShopItemViewModel : ViewModel() {
     }
 
     fun resetErrorCount() {
-        _errorInputName.value = false
+        _errorInputCount.value = false
 
     }
 

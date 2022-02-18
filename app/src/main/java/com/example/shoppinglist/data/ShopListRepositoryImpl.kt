@@ -1,5 +1,6 @@
 package com.example.shoppinglist.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.shoppinglist.domain.repository.ShopListRepository
@@ -9,7 +10,7 @@ import java.lang.RuntimeException
 import java.util.*
 import kotlin.Comparator
 
-class ShopListRepositoryImpl : ShopListRepository {
+object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLiveData = MutableLiveData<List<ShopItem>>()
     private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
@@ -31,6 +32,7 @@ class ShopListRepositoryImpl : ShopListRepository {
     }
 
     override fun editShopItem(shopItem: ShopItem) {
+        Log.d("TAG",shopItem.toString())
         val oldShopItem = getShopItem(shopItem.id)
         shopList.remove(oldShopItem)
         addShopItem(shopItem)

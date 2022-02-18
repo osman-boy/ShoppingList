@@ -1,14 +1,16 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.databinding.ActivityMainBinding
-import com.example.shoppinglist.presentation.ShopListAdapter.Companion.MAX_POOL_SIZE
-import com.example.shoppinglist.presentation.ShopListAdapter.Companion.VIEW_TYPE_DISABLED
-import com.example.shoppinglist.presentation.ShopListAdapter.Companion.VIEW_TYPE_ENABLED
+import com.example.shoppinglist.presentation.adapter.ShopListAdapter
+import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.MAX_POOL_SIZE
+import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_DISABLED
+import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_ENABLED
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         viewModel.shopList.observe(this) {
+            Log.d("TAG", "observe main ${it[0]}")
             shopListAdapter.submitList(it)
         }
     }
@@ -39,15 +42,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupClickListener() {
-        shopListAdapter.onShopItemLongClickListener =
-            { viewModel.changeEnableState(shopItem = it) }
+        shopListAdapter.onShopItemLongClickListener = { viewModel.changeEnableState(shopItem = it) }
 
         shopListAdapter.onShopItemClickListener = {
-            startActivity(ShopItemActivity.newIntentAddItem(this))
+            startActivity(ShopItemActivity.newIntentEditItem(this, it.id))
         }
 
         binding.buttonAddShopItem.setOnClickListener {
-            startActivity(ShopItemActivity.newIntentEditItem(this))
+            startActivity(ShopItemActivity.newIntentAddItem(this))
         }
     }
 

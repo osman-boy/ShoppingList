@@ -11,13 +11,13 @@ import com.example.shoppinglist.domain.usecase.RemoveShopItemUseCase
 
 class MainViewModel : ViewModel() {
 
-    private val shopListRepository = ShopListRepositoryImpl()
+    private val shopListRepository = ShopListRepositoryImpl
     private val getShopListUseCase = GetShopListUseCase(shopListRepository)
     private val editShopItemUseCase = EditShopItemUseCase(shopListRepository)
     private val removeShopItemUseCase = RemoveShopItemUseCase(shopListRepository)
 
 
-    var shopList: LiveData<List<ShopItem>> = getShopListUseCase.getShopList()
+    val shopList =  getShopListUseCase.getShopList()
 
     fun removeShopItem(shopItem: ShopItem) {
         removeShopItemUseCase.removeShopItem(shopItem)

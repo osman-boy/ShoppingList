@@ -1,10 +1,11 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.model.ShopItem
+import com.example.shoppinglist.presentation.ShopViewHolder
 
 
 typealias OnShopItemLongClickListener = (shopItem: ShopItem) -> Unit
@@ -41,6 +42,10 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopViewHolder>(ItemDiffUtilCallba
         holder.itemView.setOnLongClickListener {
             onShopItemLongClickListener?.invoke(item)
             true
+        }
+
+        holder.itemView.setOnClickListener {
+            onShopItemClickListener?.invoke((item))
         }
     }
 
