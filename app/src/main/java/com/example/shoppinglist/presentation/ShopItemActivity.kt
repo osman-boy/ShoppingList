@@ -3,100 +3,34 @@ package com.example.shoppinglist.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.shoppinglist.databinding.FragmentShopItemBinding
+import com.example.shoppinglist.databinding.ActivityShopItemBinding
 import com.example.shoppinglist.domain.model.ShopItem
 
 class ShopItemActivity : AppCompatActivity() {
-    val viewModel by viewModels<ShopItemViewModel>()
-    var shopItemId = ShopItem.UNDEFINED_ID
+
+    private var shopItemId = ShopItem.UNDEFINED_ID
     private var screenMode = MODE_UNKNOWN
-    private lateinit var binding: FragmentShopItemBinding
+    private lateinit var binding: ActivityShopItemBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentShopItemBinding.inflate(layoutInflater).also { setContentView(it.root) }
+        binding = ActivityShopItemBinding.inflate(layoutInflater).also { setContentView(it.root) }
         parseIntent()
         startScreenRightMode()
-        setupCountTextWatcher()
-        setupNameTextWatcher()
-        viewModel.errorInputCount.observe(this) {
-            if (it) binding.tilCount.error = "Count filed is empty, please enter something"
-        }
-
-        viewModel.errorInputName.observe(this) {
-            if (it) binding.tilName.error = "Count filed is empty, please enter something"
-        }
-
-        viewModel.shouldCloseScreen.observe(this) {
-            finish()
-        }
 
     }
 
     private fun startScreenRightMode() {
-        when (screenMode) {
-            MODE_EDIT -> launchEditMode(shopItemId)
-            MODE_ADD -> launchAddMode()
+        val fragment = when (screenMode) {
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemId)
+            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            else -> throw java.lang.RuntimeException("Unknown screen mode :$screenMode")
         }
-    }
-
-
-    private fun setupNameTextWatcher() {
-        val nameTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorName()
-                binding.tilName.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        }
-        binding.etName.addTextChangedListener(nameTextWatcher)
-    }
-
-
-    private fun setupCountTextWatcher() {
-        val countTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorCount()
-                binding.tilCount.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        }
-        binding.etCount.addTextChangedListener(countTextWatcher)
-    }
-
-
-
-    private fun launchAddMode() {
-        binding.saveButton.setOnClickListener {
-            val name = binding.etName.text?.toString()
-            val count = binding.etCount.text?.toString()
-            viewModel.addShopItem(name, count)
-        }
-    }
-
-    private fun launchEditMode(shopItemId: Int) {
-        viewModel.getShopItem(shopItemId)
-        viewModel.shopItem.observe(this) {
-            binding.etCount.setText(it.count.toString())
-            binding.etName.setText(it.name)
-        }
-
-        binding.saveButton.setOnClickListener {
-            with(binding){
-                viewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
-            }
-        }
-
+        supportFragmentManager.beginTransaction()
+            .add(binding.shopItemContainer.id, fragment)
+            .commit()
     }
 
 
@@ -116,7 +50,6 @@ class ShopItemActivity : AppCompatActivity() {
                 throw java.lang.RuntimeException("Param shopItem id is absent")
             }
             shopItemId = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
-
         }
 
 
