@@ -1,12 +1,8 @@
 package com.example.shoppinglist.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.model.ShopItem
 
@@ -14,16 +10,10 @@ import com.example.shoppinglist.domain.model.ShopItem
 typealias OnShopItemLongClickListener = (shopItem: ShopItem) -> Unit
 typealias OnShopItemClickListener = (shopItem: ShopItem) -> Unit
 
-class ShopListAdapter : ListAdapter<ShopItem, ShopListAdapter.ShopViewHolder>(ItemDiffUtilCallback()) {
+class ShopListAdapter : ListAdapter<ShopItem, ShopViewHolder>(ItemDiffUtilCallback()) {
 
     var onShopItemLongClickListener: OnShopItemLongClickListener? = null
     var onShopItemClickListener: OnShopItemClickListener? = null
-
-    class ShopViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val shopName = view.findViewById<TextView>(R.id.tv_name)
-        val shopCount = view.findViewById<TextView>(R.id.tv_count)
-
-    }
 
 
     override fun getItemViewType(position: Int): Int {

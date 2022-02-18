@@ -1,8 +1,6 @@
 package com.example.shoppinglist.presentation
 
 import android.os.Bundle
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -43,8 +41,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListener() {
         shopListAdapter.onShopItemLongClickListener =
             { viewModel.changeEnableState(shopItem = it) }
+
         shopListAdapter.onShopItemClickListener = {
-            Toast.makeText(applicationContext, it.toString(), LENGTH_SHORT).show()
+            startActivity(ShopItemActivity.newIntentAddItem(this))
+        }
+
+        binding.buttonAddShopItem.setOnClickListener {
+            startActivity(ShopItemActivity.newIntentEditItem(this))
         }
     }
 
