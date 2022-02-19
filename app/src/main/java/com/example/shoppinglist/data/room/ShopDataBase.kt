@@ -24,7 +24,8 @@ abstract class ShopDataBase : RoomDatabase() {
             return instance ?: synchronized(LOCK) {
                 instance?.let { return it }
                 val newInstance =
-                    Room.databaseBuilder(application, ShopDataBase::class.java, DB_NAME).build()
+                    Room.databaseBuilder(application, ShopDataBase::class.java, DB_NAME)
+                        .build()
                 instance = newInstance
                 newInstance
             }

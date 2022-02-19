@@ -41,7 +41,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
 
 
     fun getShopItem(id: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _shopItem.postValue(getShopItemUseCase.getShopItem(id))
         }
     }
@@ -51,7 +51,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 _shopItem.value?.apply {
                     editShopItemUseCase.editShopItem(this.copy(name = name, count = count))
                     finishWork()
@@ -66,7 +66,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 addShopItemUseCase.addShopItem(ShopItem(name, count, false))
                 finishWork()
             }
@@ -109,7 +109,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun finishWork() {
-        _shouldCloseScreen.value = Unit
+        _shouldCloseScreen.postValue(Unit)
 
     }
 

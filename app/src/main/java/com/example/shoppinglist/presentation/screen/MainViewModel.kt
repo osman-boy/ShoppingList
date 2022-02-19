@@ -23,14 +23,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val shopList = getShopListUseCase.getShopList()
 
     fun removeShopItem(shopItem: ShopItem) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             removeShopItemUseCase.removeShopItem(shopItem)
         }
     }
 
     fun changeEnableState(shopItem: ShopItem) {
-        viewModelScope.launch {
-            val newItem = shopItem.copy(enabled = !shopItem.enabled)
+        val newItem = shopItem.copy(enabled = !shopItem.enabled)
+        viewModelScope.launch(Dispatchers.IO) {
             editShopItemUseCase.editShopItem(newItem)
         }
     }
