@@ -1,14 +1,13 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.screen
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.shoppinglist.databinding.ActivityShopItemBinding
 import com.example.shoppinglist.domain.model.ShopItem
 
-class ShopItemActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private var shopItemId = ShopItem.UNDEFINED_ID
     private var screenMode = MODE_UNKNOWN

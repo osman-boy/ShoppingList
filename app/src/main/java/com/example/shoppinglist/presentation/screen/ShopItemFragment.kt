@@ -1,7 +1,6 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.screen
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,7 +20,7 @@ class ShopItemFragment : Fragment() {
     private var shopItemId = ShopItem.UNDEFINED_ID
     private var screenMode = MODE_UNKNOWN
 
-    private val viewModel by viewModels<ShopItemViewModel>()
+    private val shopItemViewModel by viewModels<ShopItemViewModel>()
     private lateinit var binding: FragmentShopItemBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +40,7 @@ class ShopItemFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShopItemBinding.inflate(inflater, container, false)
@@ -51,17 +49,14 @@ class ShopItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.viewModel = shopItemViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         startScreenRightMode()
         setupCountTextWatcher()
         setupNameTextWatcher()
-        viewModel.errorInputCount.observe(viewLifecycleOwner) {
-            if (it) binding.tilCount.error = "Count filed is empty"
-        }
-        viewModel.errorInputName.observe(viewLifecycleOwner) {
-            if (it) binding.tilName.error = "Name filed is empty"
-        }
-        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            onEditingFinishedListener?.onEditingFinished()
+
+        shopItemViewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -81,7 +76,7 @@ class ShopItemFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorName()
+                shopItemViewModel.resetErrorName()
                 binding.tilName.error = null
             }
 
@@ -96,7 +91,7 @@ class ShopItemFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorCount()
+                shopItemViewModel.resetErrorCount()
                 binding.tilCount.error = null
             }
 
@@ -110,23 +105,17 @@ class ShopItemFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             val name = binding.etName.text?.toString()
             val count = binding.etCount.text?.toString()
-            viewModel.addShopItem(name, count)
+            shopItemViewModel.addShopItem(name, count)
         }
     }
 
     private fun launchEditMode(shopItemId: Int) {
-        viewModel.getShopItem(shopItemId)
-        viewModel.shopItem.observe(viewLifecycleOwner) {
-            binding.etCount.setText(it.count.toString())
-            binding.etName.setText(it.name)
-        }
-
+        shopItemViewModel.getShopItem(shopItemId)
         binding.saveButton.setOnClickListener {
             with(binding) {
-                viewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
+                shopItemViewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
             }
         }
-
     }
 
 
@@ -140,7 +129,8 @@ class ShopItemFragment : Fragment() {
             screenMode = mode
 
             if (screenMode == MODE_EDIT) {
-                if (!it.containsKey(EXTRA_SHOP_ITEM_ID)) throw java.lang.RuntimeException("Param shopItem id is absent")
+                if (!it.containsKey(EXTRA_SHOP_ITEM_ID))
+                    throw java.lang.RuntimeException("Param shopItem id is absent")
 
                 shopItemId = it.getInt(EXTRA_SHOP_ITEM_ID, ShopItem.UNDEFINED_ID)
             }

@@ -1,11 +1,10 @@
-package com.example.shoppinglist.presentation
+package com.example.shoppinglist.presentation.screen
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
@@ -17,7 +16,7 @@ import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.M
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_DISABLED
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_ENABLED
 
-class MainActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
