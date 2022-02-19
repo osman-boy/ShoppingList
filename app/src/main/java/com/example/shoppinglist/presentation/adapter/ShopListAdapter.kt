@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.model.ShopItem
-import com.example.shoppinglist.presentation.ShopViewHolder
 
 
 typealias OnShopItemLongClickListener = (shopItem: ShopItem) -> Unit

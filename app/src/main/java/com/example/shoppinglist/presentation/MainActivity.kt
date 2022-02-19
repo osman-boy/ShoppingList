@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
@@ -16,7 +17,7 @@ import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.M
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_DISABLED
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_ENABLED
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
 
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
@@ -50,14 +51,14 @@ class MainActivity : AppCompatActivity() {
         shopListAdapter.onShopItemClickListener = {
             launchFragment(
                 fragment = ShopItemFragment.newInstanceEditItem(it.id),
-                intent = ShopItemActivity.newIntentEditItem(this, it.id)
+                intent = ShopItemActivity.newIntentEditItem(this, it.id),
             )
         }
 
         binding.buttonAddShopItem.setOnClickListener {
             launchFragment(
                 fragment = ShopItemFragment.newInstanceAddItem(),
-                intent = ShopItemActivity.newIntentAddItem(this)
+                intent = ShopItemActivity.newIntentAddItem(this),
             )
 
         }
@@ -84,5 +85,9 @@ class MainActivity : AppCompatActivity() {
         }
         ItemTouchHelper(callback).attachToRecyclerView(binding.rvShopList)
 
+    }
+
+    override fun onEditingFinished() {
+        onBackPressed()
     }
 }

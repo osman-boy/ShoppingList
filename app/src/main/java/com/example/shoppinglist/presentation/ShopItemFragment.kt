@@ -1,5 +1,7 @@
 package com.example.shoppinglist.presentation
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,15 +16,28 @@ import com.example.shoppinglist.domain.model.ShopItem
 
 class ShopItemFragment : Fragment() {
 
-    private val viewModel by viewModels<ShopItemViewModel>()
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
     private var shopItemId = ShopItem.UNDEFINED_ID
     private var screenMode = MODE_UNKNOWN
+
+    private val viewModel by viewModels<ShopItemViewModel>()
     private lateinit var binding: FragmentShopItemBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseParams()
 
+    }
+
+    override fun onAttach(context: Context) {
+
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw RuntimeException("${context.javaClass.name} must implements OnEditingFinishedListener")
+        }
     }
 
     override fun onCreateView(
@@ -46,7 +61,7 @@ class ShopItemFragment : Fragment() {
             if (it) binding.tilName.error = "Name filed is empty"
         }
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishedListener?.onEditingFinished()
         }
     }
 
@@ -136,6 +151,7 @@ class ShopItemFragment : Fragment() {
 
     companion object {
 
+        private const val TAG="Shop"
         private const val EXTRA_SCREEN_MODE = "extra_mode"
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
@@ -159,6 +175,13 @@ class ShopItemFragment : Fragment() {
             }
         }
 
+
+    }
+
+
+    interface OnEditingFinishedListener {
+
+        fun onEditingFinished()
 
     }
 

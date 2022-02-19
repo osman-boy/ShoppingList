@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.shoppinglist.databinding.ActivityShopItemBinding
 import com.example.shoppinglist.domain.model.ShopItem
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(),ShopItemFragment.OnEditingFinishedListener {
 
     private var shopItemId = ShopItem.UNDEFINED_ID
     private var screenMode = MODE_UNKNOWN
@@ -18,8 +18,9 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShopItemBinding.inflate(layoutInflater).also { setContentView(it.root) }
         parseIntent()
-        startScreenRightMode()
-
+        if(savedInstanceState==null) {
+            startScreenRightMode()
+        }
     }
 
     private fun startScreenRightMode() {
@@ -74,5 +75,9 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_SHOP_ITEM_ID, shopItemId)
             return intent
         }
+    }
+
+    override fun onEditingFinished() {
+        finish()
     }
 }
