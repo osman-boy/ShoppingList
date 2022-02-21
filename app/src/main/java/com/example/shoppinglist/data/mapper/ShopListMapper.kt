@@ -2,11 +2,12 @@ package com.example.shoppinglist.data.mapper
 
 import com.example.shoppinglist.data.room.ShopItemDb
 import com.example.shoppinglist.domain.model.ShopItem
+import javax.inject.Inject
 
 /**
  * Created by osmanboy on 2/19/2022.
  */
-class ShopListMapper {
+class ShopListMapper @Inject constructor() {
 
     fun mapEntityToDbModel(shopItem: ShopItem) =
         with(shopItem) { ShopItemDb(id, name, count, enabled) }

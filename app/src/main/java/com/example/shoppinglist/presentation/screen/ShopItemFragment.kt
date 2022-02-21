@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.shoppinglist.App
 import com.example.shoppinglist.databinding.FragmentShopItemBinding
 import com.example.shoppinglist.domain.model.ShopItem
+import javax.inject.Inject
 
 
 class ShopItemFragment : Fragment() {
@@ -20,10 +22,18 @@ class ShopItemFragment : Fragment() {
     private var shopItemId = ShopItem.UNDEFINED_ID
     private var screenMode = MODE_UNKNOWN
 
-    private val shopItemViewModel by viewModels<ShopItemViewModel>()
+    @Inject
+    lateinit var factory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
+    private val shopItemViewModel by viewModels<ShopItemViewModel> { factory }
+
     private lateinit var binding: FragmentShopItemBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         parseParams()
 

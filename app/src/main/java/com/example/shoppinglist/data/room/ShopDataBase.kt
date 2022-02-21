@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 /**
  * Created by osmanboy on 2/19/2022.
  */
-@Database(entities = [ShopItemDb::class], version = 1)
+@Database(entities = [ShopItemDb::class], version = 1, exportSchema = false)
 abstract class ShopDataBase : RoomDatabase() {
 
 

@@ -1,30 +1,27 @@
 package com.example.shoppinglist.presentation.screen
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shoppinglist.data.ShopListRepositoryImpl
 import com.example.shoppinglist.domain.model.ShopItem
 import com.example.shoppinglist.domain.usecase.AddShopItemUseCase
 import com.example.shoppinglist.domain.usecase.EditShopItemUseCase
 import com.example.shoppinglist.domain.usecase.GetShopItemUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Created by osmanboy on 2/17/2022.
  */
 
-class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
+class ShopItemViewModel @Inject constructor(
+   private val getShopItemUseCase: GetShopItemUseCase,
+   private val editShopItemUseCase: EditShopItemUseCase,
+   private val addShopItemUseCase: AddShopItemUseCase
+) : ViewModel() {
 
-    private val shopListRepository = ShopListRepositoryImpl(application)
-    private val getShopItemUseCase = GetShopItemUseCase(shopListRepository)
-    private val editShopItemUseCase = EditShopItemUseCase(shopListRepository)
-    private val addShopItemUseCase = AddShopItemUseCase(shopListRepository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean> get() = _errorInputName

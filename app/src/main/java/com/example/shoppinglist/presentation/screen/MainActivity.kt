@@ -10,19 +10,28 @@ import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.shoppinglist.App
 import com.example.shoppinglist.databinding.ActivityMainBinding
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.MAX_POOL_SIZE
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_DISABLED
 import com.example.shoppinglist.presentation.adapter.ShopListAdapter.Companion.VIEW_TYPE_ENABLED
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
-    private val viewModel by viewModels<MainViewModel>()
+    @Inject
+    lateinit var factory: ViewModelFactory
+
+    private val component by lazy {
+        (application as App).component
+    }
+    private val viewModel by viewModels<MainViewModel> { factory }
     private lateinit var binding: ActivityMainBinding
     private lateinit var shopListAdapter: ShopListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
         setupRecyclerView()
